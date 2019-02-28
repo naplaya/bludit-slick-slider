@@ -1,0 +1,91 @@
+        
+        body{width: 700px;}
+        
+        /* root element */
+        .slick-slider
+        {
+             overflow: hidden;
+        }
+        /*#############################################*/
+
+
+
+        /* slides */
+        .slide
+        {
+            height: 350px;
+            border:1px solid;
+        }
+
+        .slide img
+        {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+            object-position: 0 0;
+        }
+
+        .slide img.contain{object-fit: contain;}
+
+        .slide{position:relative;}
+
+
+        .text-box
+        {
+            margin:30px;
+            background-color: rgba(33, 150, 243, 0.9);
+            z-index: 99;
+            position: absolute;
+            padding: 16px;
+            width: 400px;
+            border-radius: 2px;
+
+        }
+
+        .text-box .title
+        {
+            font-size: 24px;
+        }
+
+        .text-box span
+        {
+            color: white;
+        }
+
+        .top{top:0;}
+        .bottom{bottom:0;}
+        .left
+        {
+            left:0;
+            text-align: left;
+        }
+        .right
+        {
+            right:0;
+            text-align: right;
+        }
+        /*#############################################*/
+    
+    
+        
+        /* Edit theme */
+        
+        .text-box input 
+        {
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid;
+        }
+
+        .text-box.right input 
+        {
+            text-align: right;
+        }
+        
+        .slide-settings
+        {
+            display: flex;
+        }
+    
+    
