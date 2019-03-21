@@ -1,6 +1,6 @@
 <?php
 
-class pluginSlides extends Plugin {
+class pluginSlickSlider extends Plugin {
 
 	public function init()
 	{
@@ -19,6 +19,11 @@ class pluginSlides extends Plugin {
 		// Disable default Save and Cancel button
 		$this->formButtons = true;
 	}
+    
+    public function registerHooks()
+    {
+        return array("slider");
+    }
 
 	// Method called when a POST request is sent
 	public function post()
@@ -195,4 +200,144 @@ class pluginSlides extends Plugin {
 
 		return $html;
 	}
+    
+
+    
+    
+    public function siteHead()
+    {
+        global $L, $content;
+        
+        // Get the JSON DB, getValue() with the option unsanitized HTML code
+		$jsondb = $this->getValue('jsondb', $unsanitized=false);
+        
+        //include external Files
+        $html .= $this->includeJS('jquery-3.3.1.min.js');
+        $html .= $this->includeJS('jquery-migrate-1.2.1.min.js');
+        $html .= $this->includeJS('slick.min.js');
+        $html .= $this->includeJS('slider.js');
+        
+        $html .= $this->includeCSS('slick.min.css');
+        $html .= $this->includeCSS('slick-theme.css');
+        $html .= $this->includeCSS('slick.css');
+        
+        
+  
+
+        //Slider html (root-elemnt)
+        $html .= '<div class="slick-background"><div class="slick-slider">';
+        $index =0;
+        foreach ($content as $slide)
+        {   
+            //progress Slide Settings
+            if($slide->type()!='sticky'){break;}
+
+            $ts = "[SLIDE]";
+            $te = "[SLIDE-END]";
+
+            // Get the page content into a variable.
+            $page_content = strip_tags($slide->contentBreak());
+            $p = array();
+            $p['box-pos'] = "top right";
+
+            if(stripos($page_content, $ts) !== false && stripos($page_content, "[SLIDE-END]") !== false)
+            {
+                $str_start = stripos($page_content, $ts);
+                $str_len = stripos($page_content, $te) - $str_start;
+                $slide_props = trim(substr($page_content, $props_start + strlen("[SLIDE]"),$str_len-strlen("[SLIDE]")));
+                $slide_props = str_replace(array("\r\n", "\n", "\r"), "", $slide_props);
+
+                foreach(explode(",", $slide_props)as $prop)
+                {
+                    if(strpos($prop, ":") !== false)
+                    {
+                        $prop = explode(":", $prop);
+                        $p[$prop[0]] = $prop[1];
+                    }else 
+                    { $p[$prop] = true; }
+                }
+                
+                //set backgroundcolor to transparent
+                if(isset($p['no-box-color'])) $p['box-color'] = 'transparent';
+
+                $page_content = substr_replace($page_content, "", $str_start, $str_len+strlen($te));
+            }
+            //Progress end
+            
+            
+            //Textbox
+            $textbox = "";
+            if(!isset($p['no-detail']) && !empty(strip_tags($page_content)))
+            {
+                $readmore = "";
+                if ($slide->readMore())
+                {
+
+$readmore = <<<EOF
+<div class="text-right pt-3">
+    <a class="btn btn-primary btn-sm" href="{$slide->permalink()}" role="button">
+        {$L->get('Read more')}
+    </a>
+</div>
+EOF;
+                }//end readmore
+
+$textbox = <<<EOF
+<p class="detail" style="color:'{$p["text-color"]}">
+    {strip_tags($page_content)}
+    <!-- Shows "read more" button if necessary -->
+    {$readmore}
+</p>
+EOF;
+            }//end textbox
+            
+            
+            if(isset($p["box-btn-primary-title"]))
+            {
+                
+                $actions = '<div class="actions">';
+                    if(isset($p["box-btn-primary-title"]))  $actions .= '<a href="'.$p["box-btn-primary-link"].'" class="button">'.$p["box-btn-primary-title"].'</a>';
+                    if(isset($p["box-btn-secondary-title"]))$actions .= '<a href="'.$p["box-btn-secondary-link"].'" class="button">'.$p["box-btn-secondary-title"].'</a>';
+                $actions .= '</div>';
+            }
+            
+//slide
+$html .= <<<EOF
+<a href="{$slide->permalink()}" class="slide" style="background-color:{$p["background-color"]}">
+    <input id="slide_bg_{$index}" type="hidden" value="{$p["background-color"]}">
+    <img id="slide_img_{$index}" 
+        src="{$slide->coverImage()}" 
+        class="{$p["img-pos"]} {$p["img-mode"]}"
+    >
+    <div class="text-box {$p['box-pos']}" style="background-color:{$p["box-color"]}">
+        <p class="title" style="color:{$p["text-color"]}" >
+            {$slide->title()}
+        </p>
+
+        {$textBox}
+
+        {$actions}
+    </div>
+</a>
+EOF;
+//slide end            
+
+            $index++;
+        }//end foreach slide
+        
+        
+        
+        $html .= '</div></div>';
+                
+        return $html;
+    }
+    
+    
+    
+    //Method called on custom Hook "slider"
+    public function slider()
+    {
+        
+
+    }
 }
