@@ -259,7 +259,28 @@ class pluginSlickSlider extends Plugin {
                 
                 //set backgroundcolor to transparent
                 if(isset($p['no-box-color'])) $p['box-color'] = 'transparent';
+                else if(isset($p['box-color-background'])) $p['box-color'] = 'transparent';
+                
+                //if box color is set and starts with hex-color indicator and is with it 9 long or transparent setting is set
+                else if(isset($p['box-color']) && substr($p['box-color'], 0, 1)=== "#" && (strlen($p['box-color'])==9 || isset($p['box-color-t'])))
+                {
+                    $val = $p['box-color'];
+                    
+                    //convert Hex to dec from a 6 or 8 char long hex-color
+                    $r = base_convert(substr($val, 1, 2), 16, 10);
+                    $g = base_convert(substr($val, 3, 2), 16, 10);
+                    $b = base_convert(substr($val, 5, 2), 16, 10);
+                    $a = str_replace(',', '.', base_convert(substr($val, 7), 16, 10)/255);
+                    
+                  
 
+                    echo $a;
+                    if(isset($p['box-color-t'])) $a = $p['box-color-t'];
+
+                    $p['box-color'] = 'rgba('.$r.', '.$g.', '.$b.', '.$a.')';
+                    
+                }
+                
                 $page_content = substr_replace($page_content, "", $str_start, $str_len+strlen($te));
             }
             //Progress end
@@ -281,10 +302,13 @@ $readmore = <<<EOF
 </div>
 EOF;
                 }//end readmore
-
+                
+                
+$detail = strip_tags($page_content);
+                
 $textbox = <<<EOF
 <p class="detail" style="color:'{$p["text-color"]}">
-    {strip_tags($page_content)}
+    {$page_content}
     <!-- Shows "read more" button if necessary -->
     {$readmore}
 </p>

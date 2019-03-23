@@ -240,7 +240,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
 /* root element */
 .slick-slider
 {
-    max-width: 1110px;
+    max-width: 1140px;
     margin: 0 auto;
 }
 /*#############################################*/
@@ -346,7 +346,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
     z-index: 99;
     position: absolute;
     padding: 25px;
-    width: 400px;
+    max-width: 600px;
     border-radius: 5px;
     overflow: hidden;
     background-color: white;
@@ -421,17 +421,35 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
 
 
 
-@media only screen and (max-width: 1110px) {
+@media only screen and (max-width: 1199px) {
     .slide{height: auto;}
     
-    /*.textbox
+    .slick-prev{left: 0}
+    .slick-next{right: 0}    
+}
+
+@media only screen and (max-width: 500px) {
+    .slide{height: auto;}
+    
+    .textbox
     {
         width: 100%;
         margin: 0;
         position: static;
-    }*/
+    }
     
-
+    .slide img{
+        height: 250px;
+       
+    }
+    
+    .text-box{
+         border-radius: 0;
+        position: static;
+        margin:0;
+        margin-bottom: 20px;
+        width: 100%
+    }
     
     .slick-prev{left: 0}
     
