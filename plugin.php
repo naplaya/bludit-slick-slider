@@ -2,68 +2,39 @@
 
 class pluginSlickSlider extends Plugin {
 
+    
+    //start and end tags
+    public $ts = "[SLIDE]";
+    public $te = "[SLIDE-END]";
+    
 	public function init()
 	{
-		// JSON database
-		$jsondb = json_encode(array(
-			'Bludit'=>'https://www.bludit.com',
-			'Bludit PRO'=>'https://pro.bludit.com'
-		));
+		
 
 		// Fields and default values for the database of this plugin
 		$this->dbFields = array(
-			'label'=>'Links',
-			'jsondb'=>$jsondb
+			'autoplay'=>'true',
+			'autoplaySpeed'=>5500,
+            'useAsTitle'=>false,
+            'sliderPagesWithChilds'=>true,    
 		);
 
 		// Disable default Save and Cancel button
 		$this->formButtons = true;
 	}
     
-    public function registerHooks()
-    {
-        return array("slider");
-    }
-
 	// Method called when a POST request is sent
 	public function post()
 	{
       
-        
-        
-		// Get current jsondb value from database
-		// All data stored in the database is html encoded
-		$jsondb = $this->db['jsondb'];
-		$jsondb = Sanitize::htmlDecode($jsondb);
-
-		// Convert JSON to Array
-		$links = json_decode($jsondb, true);
-
-		// Check if the user click on the button delete or add
-		if( isset($_POST['deleteLink']) ) {
-			// Values from $_POST
-			$name = $_POST['deleteLink'];
-
-			// Delete the link from the array
-			unset($links[$name]);
-		}
-		elseif( isset($_POST['addLink']) ) {
-			// Values from $_POST
-			$name = $_POST['linkName'];
-			$url = $_POST['linkURL'];
-
-			// Check empty string
-			if( empty($name) ) { return false; }
-
-			// Add the link
-			$links[$name] = $url;
-		}
-        
-        $this->db["box_title_0"] = Sanitize::html($_POST["box_title_0"]);
-
 		// Encode html to store the values on the database
-		$this->db['label'] = Sanitize::html($_POST['label']);
-		$this->db['jsondb'] = Sanitize::html(json_encode($links));
+		$this->db['autoplay'] = Sanitize::html($_POST['autoplay']);
+		$this->db['autoplaySpeed'] = Sanitize::html($_POST['autoplaySpeed']);
+        $this->db['useOnParents'] = Sanitize::html($_POST['useOnParents']);
+        
+        $this->db['useAsTitle'] = Sanitize::html($_POST['useAsTitle']);
+        $this->db['titleSelector'] = Sanitize::html($_POST['titleSelector']);
+        $this->db['coverImageSelector'] = Sanitize::html($_POST['coverImageSelector']);
 
 		// Save the database
 		return $this->save();
@@ -77,145 +48,120 @@ class pluginSlickSlider extends Plugin {
         
 		// Get the JSON DB, getValue() with the option unsanitized HTML code
 		$jsondb = $this->getValue('jsondb', $unsanitized=false);
-		$slides = json_decode($jsondb, true);
         
-        echo "DB CONTENT<br>";
-        
-        print_r($slides);
-        
-        echo "<br>DB CONTENT ENDE";
 
-		$html .= !empty($slides) ? '<h4 class="mt-3">'.$L->get('Links').'</h4>' : '';
+
+		$html .= '<h4 class="mt-3">'.$L->get('Settings').'</h4>';
 
             
         
         $html .= '<div>';
-		$html .= '<label>'.$L->get('Name').'</label>';
-		$html .= '<input name="linkName" type="text" value="" placeholder="Bludit">';
+		$html .= '<label>'.$L->get('autplay').'</label>';
+		$html .= '<input name="autoplay" type="text" value="'.$this->getValue('autoplay').'" placeholder="true">';
 		$html .= '</div>';
 
 		$html .= '<div>';
-		$html .= '<label>'.$L->get('Url').'</label>';
-		$html .= '<input name="linkURL" type="text" class="form-control" value="" placeholder="https://www.bludit.com/">';
-		$html .= '</div>';
-
-		$html .= '<div>';
-		$html .= '<button name="addLink" class="btn btn-primary my-2" type="submit">'.$L->get('Add').'</button>';
+		$html .= '<label>'.$L->get('autoplay speed').'</label>';
+		$html .= '<input name="autoplaySpeed" type="text" class="form-control" value="'.$this->getValue('autoplaySpeed').'" placeholder="https://www.bludit.com/">';
 		$html .= '</div>';
         
+        //$html .= '<div>';
+		//$html .= '<label>'.$L->get('useOnParents').'</label>';
+		//$html .= '<input name="useOnParents" type="text" class="form-control" value="'.$this->getValue('useOnParents').'" placeholder="https://www.bludit.com/">';
+		//$html .= '</div>';
         
         
-        $slides = array
-            (
-                array
-                (
-                    "background" =>"#FF0000",
-                    "link"=>"test",
-                    "img"=>"https://thumbs.dreamstime.com/z/badminton-139106.jpg",
-                    "img_mode"=>"contain",
-                    "img_pos"=>"top",
-
-                    "box_color"=>"#00FF00",
-                    "box_title"=>"Willkommen",
-                    "box_detail" => "bei uns",
-                    "box_pos"=>"top right",
-                    "box_btn_title" => "More",
-                    "box_btn_color" =>"#FFFFFF"
-
-                    /*"conditions" => array
-                    (
-                        "os" => array("win", "mac", "linux"),
-                        "date" => array("from" => "2019-01-21", "to" => "2019-01-30"),
-                        "mobile" => true
-                    ) */  
-                ),
-            array
-                (
-                    "background" =>"#FF0000",
-                    "link"=>"test",
-                    "img"=>"https://thumbs.dreamstime.com/z/badminton-139106.jpg",
-                    "img_mode"=>"contain",
-                    "img_pos"=>"top",
-
-                    "box_color"=>"#00FF00",
-                    "box_title"=>"Willkommen",
-                    "box_detail" => "bei uns",
-                    "box_pos"=>"top right",
-                    "box_btn_title" => "More",
-                    "box_btn_color" =>"#FFFFFF"
-
-                    /*"conditions" => array
-                    (
-                        "os" => array("win", "mac", "linux"),
-                        "date" => array("from" => "2019-01-21", "to" => "2019-01-30"),
-                        "mobile" => true
-                    ) */  
-                )
-            );
-      
-		
-
-        //catch php content, prevent client seeing following
-        ob_start();
-        include(__DIR__."/test.php");
+        $html .= '<div>';
+		$html .= '<label>'.$L->get('useAsTitle').'</label>';
+		$html .= '<select name="useAsTitle" type="text" class="form-control" value="'.$this->getValue('useAsTitle').'">';
+            $html .= '<option value="0">'.$L->get("Don't use as title").'</option>';
+            $html .= '<option value="1">'.$L->get("Use only image").'</option>';
+            $html .= '<option value="2">'.$L->get("Use both (image and title)").'</option>';
+		$html .= '</select>';
+		$html .= '</div>';
         
-        $html .= ob_get_contents();
-        ob_end_clean();
+        $html .= '<div>';
+		$html .= '<label>'.$L->get('Title selector').'</label>';
+		$html .= '<input name="titleSelector" type="text" class="form-control" value="'.$this->getValue('titleSelector').'" placeholder=".container .title">';
+		$html .= '</div>';
+        
+        $html .= '<div>';
+		$html .= '<label>'.$L->get('Cover image selector').'</label>';
+		$html .= '<input name="coverImageSelector" type="text" class="form-control" value="'.$this->getValue('coverImageSelector').'" placeholder=".container .page-cover-image">';
+		$html .= '</div>';
+
        
-        
-        $html .= $this->includeCSS('style.css');
-		$html .= $this->includeJS('script.js');
 		return $html;
 	}
-
-	// Method called on the sidebar of the website
-	public function siteSidebar()
-	{
-		global $L;
-
-		// HTML for sidebar
-		$html  = '<div class="plugin plugin-pages">';
-		if ($this->getValue('label')) {
-			$html .= '<h2 class="plugin-label">'.$this->getValue('label').'</h2>';
-		}
-		$html .= '<div class="plugin-content">';
-		$html .= '<ul>';
-
-		// Get the JSON DB, getValue() with the option unsanitized HTML code
-		$jsondb = $this->getValue('jsondb', false);
-		$links = json_decode($jsondb);
-
-		// By default the database of categories are alphanumeric sorted
-		foreach( $links as $name=>$url ) {
-			$html .= '<li>';
-			$html .= '<a href="'.$url.'">';
-			$html .= $name;
-			$html .= '</a>';
-			$html .= '</li>';
-		}
-
-		$html .= '</ul>';
- 		$html .= '</div>';
- 		$html .= '</div>';
-
-		return $html;
-	}
-    
-
-    
     
     public function siteHead()
     {
-        global $L, $content;
+        global $L, $content, $WHERE_AM_I, $page;
         
-        // Get the JSON DB, getValue() with the option unsanitized HTML code
-		$jsondb = $this->getValue('jsondb', $unsanitized=false);
         
-        //include external Files
+        
+        $asTitle = $this->getValue('useAsTitle');
+        $forParents = $this->getValue('useOnParents');
+        echo $asTitle;
+        
+        if($WHERE_AM_I == 'home')
+        {
+            $html .= $this->includeFilesAndRootElementStart();
+            
+            $i = 0;
+            foreach ($content as $slide)
+            {   
+                //fixed pages are at the top at database. if page is sticky then loop done
+                if($slide->type()!='sticky'){break;}
+
+                // remove all tags from pagecontent
+                $page_content = strip_tags($slide->contentBreak());
+
+                //parse individual slide settings from page_content
+                $sp = $this->getSlideSettings($page_content);
+
+                //get html code of the slide represented by a page
+                $html .= $this->createSlideElement($L, $slide, $sp, $i);    
+
+                $i++;
+            }
+            
+            $html .= $this->closeRootElement();
+        }
+        else if($WHERE_AM_I == 'page' && asTitle != 0 && $page->type() == 'sticky' && $page->coverImage())
+        {
+            $html .= $this->includeFilesAndRootElementStart();
+ 
+            // remove all tags from pagecontent
+            $page_content = strip_tags($page->contentBreak());
+
+            //parse individual slide settings from page_content
+            $sp = $this->getSlideSettings($page_content);
+
+            //get html code of the slide represented by a page
+            $html .= $this->createSlideElement($L, $page, $sp, 0);                
+
+            $html .= $this->closeRootElement();
+        }
+        
+        else
+        {
+            
+        }
+        
+       
+                
+        return $html;
+    }
+    
+    public function includeFilesAndRootElementStart(){
+         //include external Files
         $html .= $this->includeJS('jquery-3.3.1.min.js');
         $html .= $this->includeJS('jquery-migrate-1.2.1.min.js');
         $html .= $this->includeJS('slick.min.js');
-        $html .= $this->includeJS('slider.js');
+        
+        include("js/slider.php");
+        $html .= $script;
         
         $html .= $this->includeCSS('slick.min.css');
         $html .= $this->includeCSS('slick-theme.css');
@@ -225,83 +171,32 @@ class pluginSlickSlider extends Plugin {
   
 
         //Slider html (root-elemnt)
-        $html .= '<div class="slick-background"><div class="slick-slider">';
-        $index =0;
-        foreach ($content as $slide)
-        {   
-            //progress Slide Settings
-            if($slide->type()!='sticky'){break;}
-
-            $ts = "[SLIDE]";
-            $te = "[SLIDE-END]";
-
-            // Get the page content into a variable.
-            $page_content = strip_tags($slide->contentBreak());
-            $p = array();
-            $p['box-pos'] = "top right";
-
-            if(stripos($page_content, $ts) !== false && stripos($page_content, "[SLIDE-END]") !== false)
+        $html .= '<div class="slick-background z-depth-1"><div class="slick-slider">';
+        
+        return $html;
+    }
+    
+    public function createSlideElement($L, $page, $p, $index){
+        global $WHERE_AM_I;
+        
+        $asTitle = $this->getValue('useAsTitle');
+        
+        //Textbox
+        $textbox = "";
+        if($WHERE_AM_I == 'home' && !isset($p['no-detail']) && !empty(strip_tags($p['content'])))
+        {
+            $readmore = "";
+            if ($page->readMore())
             {
-                $str_start = stripos($page_content, $ts);
-                $str_len = stripos($page_content, $te) - $str_start;
-                $slide_props = trim(substr($page_content, $props_start + strlen("[SLIDE]"),$str_len-strlen("[SLIDE]")));
-                $slide_props = str_replace(array("\r\n", "\n", "\r"), "", $slide_props);
-
-                foreach(explode(",", $slide_props)as $prop)
-                {
-                    if(strpos($prop, ":") !== false)
-                    {
-                        $prop = explode(":", $prop);
-                        $p[$prop[0]] = $prop[1];
-                    }else 
-                    { $p[$prop] = true; }
-                }
-                
-                //set backgroundcolor to transparent
-                if(isset($p['no-box-color'])) $p['box-color'] = 'transparent';
-                else if(isset($p['box-color-background'])) $p['box-color'] = 'transparent';
-                
-                //if box color is set and starts with hex-color indicator and is with it 9 long or transparent setting is set
-                else if(isset($p['box-color']) && substr($p['box-color'], 0, 1)=== "#" && (strlen($p['box-color'])==9 || isset($p['box-color-t'])))
-                {
-                    $val = $p['box-color'];
-                    
-                    //convert Hex to dec from a 6 or 8 char long hex-color
-                    $r = base_convert(substr($val, 1, 2), 16, 10);
-                    $g = base_convert(substr($val, 3, 2), 16, 10);
-                    $b = base_convert(substr($val, 5, 2), 16, 10);
-                    $a = str_replace(',', '.', base_convert(substr($val, 7), 16, 10)/255);
-                    
-                  
-
-                    echo $a;
-                    if(isset($p['box-color-t'])) $a = $p['box-color-t'];
-
-                    $p['box-color'] = 'rgba('.$r.', '.$g.', '.$b.', '.$a.')';
-                    
-                }
-                
-                $page_content = substr_replace($page_content, "", $str_start, $str_len+strlen($te));
-            }
-            //Progress end
-            
-            
-            //Textbox
-            $textbox = "";
-            if(!isset($p['no-detail']) && !empty(strip_tags($page_content)))
-            {
-                $readmore = "";
-                if ($slide->readMore())
-                {
 
 $readmore = <<<EOF
 <div class="text-right pt-3">
-    <a class="btn btn-primary btn-sm" href="{$slide->permalink()}" role="button">
+    <a class="btn btn-primary btn-sm" href="{$page->permalink()}" role="button">
         {$L->get('Read more')}
     </a>
 </div>
 EOF;
-                }//end readmore
+            }//end readmore
                 
                 
 $detail = strip_tags($page_content);
@@ -313,55 +208,92 @@ $textbox = <<<EOF
     {$readmore}
 </p>
 EOF;
-            }//end textbox
-            
-            
-            if(isset($p["box-btn-primary-title"]))
-            {
-                
-                $actions = '<div class="actions">';
-                    if(isset($p["box-btn-primary-title"]))  $actions .= '<a href="'.$p["box-btn-primary-link"].'" class="button">'.$p["box-btn-primary-title"].'</a>';
-                    if(isset($p["box-btn-secondary-title"]))$actions .= '<a href="'.$p["box-btn-secondary-link"].'" class="button">'.$p["box-btn-secondary-title"].'</a>';
-                $actions .= '</div>';
-            }
-            
+        }//end textbox
+
+
+        if(isset($p["box-btn-primary-title"]) && $WHERE_AM_I == 'home')
+        {
+
+            $actions = '<div class="actions">';
+                if(isset($p["box-btn-primary-title"]))  $actions .= '<a href="'.$p["box-btn-primary-link"].'" class="button">'.$p["box-btn-primary-title"].'</a>';
+                if(isset($p["box-btn-secondary-title"]))$actions .= '<a href="'.$p["box-btn-secondary-link"].'" class="button">'.$p["box-btn-secondary-title"].'</a>';
+            $actions .= '</div>';
+        }
+
+        $container = $WHERE_AM_I == 'home'? 'a':'div';
+
 //slide
 $html .= <<<EOF
-<a href="{$slide->permalink()}" class="slide" style="background-color:{$p["background-color"]}">
+<{$container} href="{$page->permalink()}" class="slide" style="background-color:{$p["background-color"]}">
     <input id="slide_bg_{$index}" type="hidden" value="{$p["background-color"]}">
-    <img id="slide_img_{$index}" 
-        src="{$slide->coverImage()}" 
+    <img src="{$page->coverImage()}" 
         class="{$p["img-pos"]} {$p["img-mode"]}"
     >
-    <div class="text-box {$p['box-pos']}" style="background-color:{$p["box-color"]}">
-        <p class="title" style="color:{$p["text-color"]}" >
-            {$slide->title()}
-        </p>
+    <div class="text-box z-depth-1 {$p['box-pos']}" style="background-color:{$p["box-color"]}">
+        <h1 class="title" style="color:{$p["text-color"]}" >
+            {$page->title()}
+        </h1>
 
         {$textBox}
 
         {$actions}
     </div>
-</a>
+</{$container}>
 EOF;
-//slide end            
-
-            $index++;
-        }//end foreach slide
+//slide end   
         
-        
-        
-        $html .= '</div></div>';
-                
         return $html;
     }
     
-    
-    
-    //Method called on custom Hook "slider"
-    public function slider()
-    {
-        
-
+    public function closeRootElement(){
+        return '</div></div>';
     }
+    
+    public function stripSlideSettings($page_content)
+    {
+         $str_start = stripos($page_content, $ts);
+        $str_len = stripos($page_content, $te) - $str_start;
+    }
+    
+    public function getSlideSettings($page_content){
+        $p = array();
+        $p['box-pos'] = "top right";
+        
+        $str_start = stripos($page_content, $ts);
+        $str_len = stripos($page_content, $te) - $str_start;
+        $slide_props = trim(substr($page_content, $props_start + strlen("[SLIDE]"),$str_len-strlen("[SLIDE]")));
+        $slide_props = str_replace(array("\r\n", "\n", "\r"), "", $slide_props);
+
+        foreach(explode(",", $slide_props)as $prop)
+        {
+            if(strpos($prop, ":") !== false)
+            {
+                $prop = explode(":", $prop);
+                $p[$prop[0]] = $prop[1];
+            }else 
+            { $p[$prop] = true; }
+        }
+
+        //set backgroundcolor to transparent
+        if(isset($p['no-box-color'])) $p['box-color'] = 'transparent';
+        else if(isset($p['box-color-background'])) $p['box-color'] = 'transparent';
+
+        //if box color is set and starts with hex-color indicator and is with it 9 long or transparent setting is set
+        else if(isset($p['box-color']) && substr($p['box-color'], 0, 1)=== "#" && (strlen($p['box-color'])==9 || isset($p['box-color-t'])))
+        {
+            $val = $p['box-color'];
+
+            //convert Hex to dec from a 6 or 8 char long hex-color
+            $r = base_convert(substr($val, 1, 2), 16, 10);
+            $g = base_convert(substr($val, 3, 2), 16, 10);
+            $b = base_convert(substr($val, 5, 2), 16, 10);
+            $a = str_replace(',', '.', base_convert(substr($val, 7), 16, 10)/255);
+
+            if(isset($p['box-color-t'])) $a = $p['box-color-t'];
+
+            $p['box-color'] = 'rgba('.$r.', '.$g.', '.$b.', '.$a.')';
+        }
+    
+        return $p;
+    }//end getSlideSettings
 }

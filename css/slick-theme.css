@@ -369,9 +369,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
 .text-box .title
 {
     line-height: 27px;
-    font-size: 24px;
     font-style: normal;
-    font-weight: 700;
     margin: 0;
 }
 
@@ -414,9 +412,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
 /*#############################################*/
 
 
-.bg-light{background-color: rgba(0,0,0,0) !important;}
 
-.bg-dark{background-color: #005c9e !important;}
 
 
 
@@ -426,17 +422,20 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
     
     .slick-prev{left: 0}
     .slick-next{right: 0}    
+    
+    
+}
+
+
+
+@media only screen and (min-width: 1199px) {
+.z-depth-1{box-shadow: none;}
 }
 
 @media only screen and (max-width: 500px) {
     .slide{height: auto;}
     
-    .textbox
-    {
-        width: 100%;
-        margin: 0;
-        position: static;
-    }
+   
     
     .slide img{
         height: 250px;
@@ -447,8 +446,10 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
          border-radius: 0;
         position: static;
         margin:0;
-        margin-bottom: 20px;
+        padding-bottom: 45px;
+        
         width: 100%
+            
     }
     
     .slick-prev{left: 0}
