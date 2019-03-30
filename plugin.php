@@ -102,7 +102,7 @@ class pluginSlickSlider extends Plugin {
         
         $asTitle = $this->getValue('useAsTitle');
         $forParents = $this->getValue('useOnParents');
-        echo $asTitle;
+       
         
         if($WHERE_AM_I == 'home')
         {
@@ -128,9 +128,10 @@ class pluginSlickSlider extends Plugin {
             
             $html .= $this->closeRootElement();
         }
-        else if($WHERE_AM_I == 'page' && asTitle != 0 && $page->type() == 'sticky' && $page->coverImage())
+        else if($WHERE_AM_I == 'page' && $asTitle != 0 && $page->type() == 'sticky' && $page->coverImage())
         {
             $html .= $this->includeFilesAndRootElementStart();
+            echo "hallo";
  
             // remove all tags from pagecontent
             $page_content = strip_tags($page->contentBreak());
@@ -180,7 +181,7 @@ class pluginSlickSlider extends Plugin {
         global $WHERE_AM_I;
         
         $asTitle = $this->getValue('useAsTitle');
-        
+        echo $WHERE_AM_I;
         //Textbox
         $textbox = "";
         if($WHERE_AM_I == 'home' && !isset($p['no-detail']) && !empty(strip_tags($p['content'])))

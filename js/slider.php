@@ -6,8 +6,8 @@ global $WHERE_AM_I, $page;
 
 if($WHERE_AM_I == 'page' && $this->getValue('useAsTitle') != 0 && $page->type() == 'sticky' && $page->coverImage())
 {
-    if($this->getValue('useAsTitle') == 2) $removeTitle = "$('".{$this->getValue('titleSelector')}."').remove();";
-    if($this->getValue('useAsTitle') >= 1) $removeCoverImage = "$('".{$this->getValue('coverImageSelector')}").remove();";
+    if($this->getValue('useAsTitle') == 2) $removeTitle =      "$('".$this->getValue('titleSelector')."').remove();";
+    if($this->getValue('useAsTitle') >= 1) $removeCoverImage = "$('".$this->getValue('coverImageSelector')."').remove();";
 }
 
 $script = <<<EOF
