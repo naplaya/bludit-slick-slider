@@ -31,7 +31,7 @@
         .slide{position:relative;}
 
 
-        .text-box
+        .textbox
         {
             margin:30px;
             background-color: rgba(33, 150, 243, 0.9);
@@ -43,12 +43,12 @@
 
         }
 
-        .text-box .title
+        .textbox .title
         {
             font-size: 24px;
         }
 
-        .text-box span
+        .textbox span
         {
             color: white;
         }
@@ -71,14 +71,14 @@
         
         /* Edit theme */
         
-        .text-box input 
+        .textbox input 
         {
             background-color: transparent;
             border: none;
             border-bottom: 1px solid;
         }
 
-        .text-box.right input 
+        .textbox.right input 
         {
             text-align: right;
         }

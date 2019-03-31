@@ -9,7 +9,7 @@
     <?php foreach ($slides as $slide): ?>
         <div href="<?php echo $slide["link"];?>" class="slide">
            <img id="slide_img_<?php echo $index;?>" src="<?php echo $slide["img"];?>" class="<?php echo isset($slide["img_mode"])? $slide["img_mode"]:"";?>">
-            <div class="text-box <?php echo $slide["box_pos"];?>">
+            <div class="textbox <?php echo $slide["box_pos"];?>">
                 <input type="text" name="box_title_<?php echo $index;?>" class="title" value="<?php echo $slide["box_title"];?>"><br>
 
                 <input type="text" value="<?php if(isset($slide["box_detail"])) echo $slide["box_detail"];?>"><br>

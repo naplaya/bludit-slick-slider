@@ -233,7 +233,7 @@ $html .= <<<EOF
     <img src="{$page->coverImage()}" 
         class="{$p["img-pos"]} {$p["img-mode"]}"
     >
-    <div class="text-box z-depth-1 {$p['box-pos']}" style="background-color:{$p["box-color"]}">
+    <div class="textbox z-depth-1 {$p['box-pos']}" style="background-color:{$p["box-color"]}">
         <h1 class="title" style="color:{$p["text-color"]}">
             {$page->title()}
         </h1>

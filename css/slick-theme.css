@@ -340,7 +340,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
 .slide img.right{object-position: 100% 0;}
 
 
-.text-box
+.textbox
 {
     margin:30px;
     z-index: 99;
@@ -366,14 +366,14 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
     text-align: right;
 }
 
-.text-box .title
+.textbox .title
 {
     line-height: 27px;
     font-style: normal;
     margin: 0;
 }
 
-.text-box .detail
+.textbox .detail
 {
     line-height: 19px;
     margin: 0;
@@ -382,7 +382,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
     text-align: justify;
 }
 
-.text-box .actions
+.textbox .actions
 {
     margin: -25px;
     margin-top: 25px;
@@ -390,7 +390,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
     border-top: 1px solid lightgray;
 }
 
-.text-box .button {
+.textbox .button {
   
     text-decoration: none;
     background-color: #EEEEEE;
@@ -401,7 +401,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
     text-align:center;
 }
 
-.text-box .button:nth-child(2) 
+.textbox .button:nth-child(2) 
 {
     border-left: 1px solid lightgray;
 }
@@ -442,7 +442,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
        
     }
     
-    .text-box{
+    .textbox{
          border-radius: 0;
         position: static;
         margin:0;
