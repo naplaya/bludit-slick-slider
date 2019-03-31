@@ -347,7 +347,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
     position: absolute;
     padding: 25px;
     max-width: 600px;
-    border-radius: 5px;
+    border-radius: 2px;
     overflow: hidden;
     background-color: white;
 }
@@ -429,7 +429,7 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
 
 
 @media only screen and (min-width: 1199px) {
-.z-depth-1{box-shadow: none;}
+    .slick-background.z-depth-1{box-shadow: none;}
 }
 
 @media only screen and (max-width: 500px) {
