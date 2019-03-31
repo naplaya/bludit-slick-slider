@@ -194,56 +194,57 @@ class pluginSlickSlider extends Plugin {
         
         $asTitle = $this->getValue('useAsTitle');
       
+        
+        
+        $textColor = strlen($p["text-color"])>0? ('style="color:'.$p["text-color"].'"'):'';
+        
         //Textbox
         $textbox = "";
         if( ($WHERE_AM_I == 'home' && !isset($p['no-detail']) && !empty(strip_tags($content))) || ($WHERE_AM_I == 'page' && $asTitle == 2) )
         {
-            $readmore = "";
-            if ($page->readMore() && false)
-            {
-                
-$readmore = <<<EOF
-<div class="text-right pt-3">
-    <g class="btn btn-primary btn-small" href="{$page->permalink()}" role="button"> {$L->get('Read more')} </g>
-</div>
-EOF;
-                
-                file_put_contents(PATH_PLUGINS."test.txt", $readmore);
-            }//end readmore
-                
+            
               
+
 $textbox = <<<EOF
-<p class="detail" style="color:{$p["text-color"]}">
+<p class="detail" {$textColor}>
     {$content}
     <!-- Shows "read more" button if necessary -->
-    {$readmore}
+
 </p>
 EOF;
             
-        
+        file_put_contents(PATH_PLUGINS."textbox.html", $textbox);
         }//end textbox
 
 
-        if(isset($p["box-btn-primary-title"]) && $WHERE_AM_I == 'home')
+        if((isset($p["btn-primary-text"])|| $page->readMore()) && $WHERE_AM_I == 'home')
         {
 
             $actions = '<div class="actions">';
-                if(isset($p["box-btn-primary-title"]))  $actions .= '<a href="'.$p["box-btn-primary-link"].'" class="button">'.$p["box-btn-primary-title"].'</a>';
-                if(isset($p["box-btn-secondary-title"]))$actions .= '<a href="'.$p["box-btn-secondary-link"].'" class="button">'.$p["box-btn-secondary-title"].'</a>';
+                if(isset($p["btn-primary-text"]))  $actions .= '<a href="'.$p["btn-primary-link"].'" class="button">'.$p["btn-primary-text"].'</a>';
+                if(isset($p["btn-secondary-text"])&&false)$actions .= '<a href="'.$p["btn-secondary-link"].'" class="button">'.$p["btn-secondary-text"].'</a>';
+                else if($page->readMore()||true)              $actions .= '<a class="button" href="'.$page->permalink().'" role="button"> '.$L->get('Read more').'</a>';
             $actions .= '</div>';
         }
+        
+        file_put_contents(PATH_PLUGINS."ac.html", $actions);
 
-        $container = $WHERE_AM_I == 'home'? 'a':'div';
+	$boxmat = "z-depth-1";
+	if(isset($p["box-color"]) && isset($p["background-color"]) && $p["box-color"] == $p["background-color"]) $boxmat = "";
+
+        if($WHERE_AM_I == 'home') $openLink = 'onclick="openLink(\''.$page->permalink().'\')"';
+        
+        
       
 //slide
 $html .= <<<EOF
-<{$container} href="{$page->permalink()}" class="slide" style="background-color:{$p["background-color"]}">
+<div href="" class="slide" style="background-color:{$p["background-color"]}" {$openLink}>
     <input id="slide_bg_{$index}" type="hidden" value="{$p["background-color"]}">
     <img src="{$page->coverImage()}" 
         class="{$p["img-pos"]} {$p["img-mode"]}"
     >
-    <div class="textbox z-depth-1 {$p['box-pos']}" style="background-color:{$p["box-color"]}">
-        <h1 class="title" style="color:{$p["text-color"]}">
+    <div class="textbox {$boxmat} {$p['box-pos']}" style="background-color:{$p["box-color"]}">
+        <h1 class="title" {$textColor}>
             {$page->title()}
         </h1>
 
@@ -251,10 +252,11 @@ $html .= <<<EOF
 
         {$actions}
     </div>
-</{$container}>
+</div>
 EOF;
 //slide end   
         
+        file_put_contents(PATH_PLUGINS."html.html", $html);
         
         return $html;
     }
@@ -281,22 +283,26 @@ EOF;
     public function getSlideSettings($page_content){
         $p = array();
         $p['box-pos'] = "top right";
+
+ $ts = "[SLIDE]";
+        $te = "[SLIDE-END]";
+
         
         $str_start = stripos($page_content, $ts);
         $str_len = stripos($page_content, $te) - $str_start;
-        $slide_props = trim(substr($page_content, $props_start + strlen("[SLIDE]"),$str_len-strlen("[SLIDE]")));
+        $slide_props = trim(substr($page_content, $str_start + strlen($ts),$str_len-strlen("[SLIDE]")));
         $slide_props = str_replace(array("\r\n", "\n", "\r"), "", $slide_props);
 
         foreach(explode(",", $slide_props)as $prop)
         {
             if(strpos($prop, ":") !== false)
             {
-                $prop = explode(":", $prop);
+                $prop = explode(":", $prop, 2);
                 $p[$prop[0]] = $prop[1];
             }else 
             { $p[$prop] = true; }
         }
-
+        
         //set backgroundcolor to transparent
         if(isset($p['no-box-color'])) $p['box-color'] = 'transparent';
         else if(isset($p['box-color-background'])) $p['box-color'] = 'transparent';

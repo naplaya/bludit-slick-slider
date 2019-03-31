@@ -15,6 +15,12 @@ if($WHERE_AM_I == 'page' && $this->getValue('useAsTitle') != 0 && $page->type() 
 $script = <<<EOF
 <script>
 
+    function openLink(\$link)
+    {
+        window.open(\$link,"_self")
+    }
+    
+
    
     var \$jq = jQuery.noConflict();
     \$jq(document).ready(function()

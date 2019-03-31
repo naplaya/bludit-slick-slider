@@ -446,11 +446,13 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
          border-radius: 0;
         position: static;
         margin:0;
-        padding-bottom: 45px;
+        padding-bottom: 24px;
         
         width: 100%
             
     }
+
+.textbox.z-depth-1{box-shadow: none;}
     
     .slick-prev{left: 0}
     
