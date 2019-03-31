@@ -7,14 +7,22 @@ global $WHERE_AM_I, $page;
 if($WHERE_AM_I == 'page' && $this->getValue('useAsTitle') != 0 && $page->type() == 'sticky' && $page->coverImage())
 {
     if($this->getValue('useAsTitle') == 2) $removeTitle =      "$('".$this->getValue('titleSelector')."').remove();";
+    else $removeTitle = "$('.slide .text-box').remove();";
+        
     if($this->getValue('useAsTitle') >= 1) $removeCoverImage = "$('".$this->getValue('coverImageSelector')."').remove();";
 }
 
 $script = <<<EOF
 <script>
+
+   
     var \$jq = jQuery.noConflict();
     \$jq(document).ready(function()
     {
+         {$removeTitle}
+        {$removeCoverImage}
+
+    
         \$jq('.slick-slider').slick(
         {
             dots: true,
@@ -41,8 +49,7 @@ $script = <<<EOF
         });
         
         
-        {$removeTitle}
-        {$removeCoverImage}
+        
     });
 </script>
 EOF;

@@ -97,7 +97,7 @@ class pluginSlickSlider extends Plugin {
     public function siteHead()
     {
         global $L, $content, $WHERE_AM_I, $page;
-        
+        $html = "";
         
         
         $asTitle = $this->getValue('useAsTitle');
@@ -125,7 +125,7 @@ class pluginSlickSlider extends Plugin {
 
                 $i++;
             }
-            
+             
             $html .= $this->closeRootElement();
         }
         else if($WHERE_AM_I == 'page' && $asTitle != 0 && $page->type() == 'sticky' && $page->coverImage())
@@ -150,7 +150,7 @@ class pluginSlickSlider extends Plugin {
         }
         
        
-                
+               
         return $html;
     }
     
@@ -179,36 +179,39 @@ class pluginSlickSlider extends Plugin {
     public function createSlideElement($L, $page, $p, $index){
         global $WHERE_AM_I;
         
-        $content = trim(strip_tags($this->stripSlideSettings($page->content())));
-        echo "<".$content.">";
+        $content = trim(strip_tags($this->stripSlideSettings($page->contentBreak())));
+        
+        
         
         $asTitle = $this->getValue('useAsTitle');
+      
         //Textbox
         $textbox = "";
-        if($WHERE_AM_I == 'home' && !isset($p['no-detail']) && !empty(strip_tags($content)))
+        if( ($WHERE_AM_I == 'home' && !isset($p['no-detail']) && !empty(strip_tags($content))) || ($WHERE_AM_I == 'page' && $asTitle == 2) )
         {
             $readmore = "";
-            if ($page->readMore())
+            if ($page->readMore() && false)
             {
-
+                
 $readmore = <<<EOF
 <div class="text-right pt-3">
-    <a class="btn btn-primary btn-sm" href="{$page->permalink()}" role="button">
-        {$L->get('Read more')}
-    </a>
+    <g class="btn btn-primary btn-small" href="{$page->permalink()}" role="button"> {$L->get('Read more')} </g>
 </div>
 EOF;
+                
+                file_put_contents(PATH_PLUGINS."test.txt", $readmore);
             }//end readmore
                 
-            
-                
+              
 $textbox = <<<EOF
-<p class="detail" style="color:'{$p["text-color"]}">
+<p class="detail" style="color:{$p["text-color"]}">
     {$content}
     <!-- Shows "read more" button if necessary -->
     {$readmore}
 </p>
 EOF;
+            
+        
         }//end textbox
 
 
@@ -222,7 +225,7 @@ EOF;
         }
 
         $container = $WHERE_AM_I == 'home'? 'a':'div';
-        
+      
 //slide
 $html .= <<<EOF
 <{$container} href="{$page->permalink()}" class="slide" style="background-color:{$p["background-color"]}">
@@ -231,7 +234,7 @@ $html .= <<<EOF
         class="{$p["img-pos"]} {$p["img-mode"]}"
     >
     <div class="text-box z-depth-1 {$p['box-pos']}" style="background-color:{$p["box-color"]}">
-        <h1 class="title" style="color:{$p["text-color"]}" >
+        <h1 class="title" style="color:{$p["text-color"]}">
             {$page->title()}
         </h1>
 
@@ -242,6 +245,7 @@ $html .= <<<EOF
 </{$container}>
 EOF;
 //slide end   
+        
         
         return $html;
     }
@@ -255,18 +259,12 @@ EOF;
         $ts = "[SLIDE]";
         $te = "[SLIDE-END]";
         
-       
         $str_start = strpos($page_content, $ts);
         if($str_start !== false)
         {
             $str_len = strpos($page_content, $te) - $str_start+strlen($te);
-            
-              var_dump($str_len);
-            
             return substr_replace($page_content, '', $str_start, $str_len);
         }
-        
-      
         
        return $page_content;
     }
