@@ -131,14 +131,13 @@ class pluginSlickSlider extends Plugin {
         else if($WHERE_AM_I == 'page' && $asTitle != 0 && $page->type() == 'sticky' && $page->coverImage())
         {
             $html .= $this->includeFilesAndRootElementStart();
-            echo "hallo";
- 
+           
             // remove all tags from pagecontent
-            $page_content = strip_tags($page->contentBreak());
+            $page_content = strip_tags($page->content());
 
             //parse individual slide settings from page_content
             $sp = $this->getSlideSettings($page_content);
-
+         
             //get html code of the slide represented by a page
             $html .= $this->createSlideElement($L, $page, $sp, 0);                
 
@@ -180,11 +179,13 @@ class pluginSlickSlider extends Plugin {
     public function createSlideElement($L, $page, $p, $index){
         global $WHERE_AM_I;
         
+        $content = trim(strip_tags($this->stripSlideSettings($page->content())));
+        echo "<".$content.">";
+        
         $asTitle = $this->getValue('useAsTitle');
-        echo $WHERE_AM_I;
         //Textbox
         $textbox = "";
-        if($WHERE_AM_I == 'home' && !isset($p['no-detail']) && !empty(strip_tags($p['content'])))
+        if($WHERE_AM_I == 'home' && !isset($p['no-detail']) && !empty(strip_tags($content)))
         {
             $readmore = "";
             if ($page->readMore())
@@ -199,12 +200,11 @@ $readmore = <<<EOF
 EOF;
             }//end readmore
                 
-                
-$detail = strip_tags($page_content);
+            
                 
 $textbox = <<<EOF
 <p class="detail" style="color:'{$p["text-color"]}">
-    {$page_content}
+    {$content}
     <!-- Shows "read more" button if necessary -->
     {$readmore}
 </p>
@@ -222,7 +222,7 @@ EOF;
         }
 
         $container = $WHERE_AM_I == 'home'? 'a':'div';
-
+        
 //slide
 $html .= <<<EOF
 <{$container} href="{$page->permalink()}" class="slide" style="background-color:{$p["background-color"]}">
@@ -235,7 +235,7 @@ $html .= <<<EOF
             {$page->title()}
         </h1>
 
-        {$textBox}
+        {$textbox}
 
         {$actions}
     </div>
@@ -252,8 +252,23 @@ EOF;
     
     public function stripSlideSettings($page_content)
     {
-         $str_start = stripos($page_content, $ts);
-        $str_len = stripos($page_content, $te) - $str_start;
+        $ts = "[SLIDE]";
+        $te = "[SLIDE-END]";
+        
+       
+        $str_start = strpos($page_content, $ts);
+        if($str_start !== false)
+        {
+            $str_len = strpos($page_content, $te) - $str_start+strlen($te);
+            
+              var_dump($str_len);
+            
+            return substr_replace($page_content, '', $str_start, $str_len);
+        }
+        
+      
+        
+       return $page_content;
     }
     
     public function getSlideSettings($page_content){
