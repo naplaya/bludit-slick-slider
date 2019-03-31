@@ -154,6 +154,15 @@ class pluginSlickSlider extends Plugin {
         return $html;
     }
     
+    public function pageEnd(){
+        
+        // Get the page content into a variable.
+        $page_content = ob_get_clean();
+
+        // Display the changed page content.
+        return $this->stripSlideSettings($page_content);; 
+    }
+    
     public function includeFilesAndRootElementStart(){
          //include external Files
         $html .= $this->includeJS('jquery-3.3.1.min.js');
