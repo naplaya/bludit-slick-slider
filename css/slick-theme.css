@@ -202,7 +202,7 @@
     color: black;
 }
 
-a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
+.textbox a, .textbox a:hover, .textbox a:active, .textbox a:link, .textbox a:visited
 {
     text-decoration: none;
     color: black;
@@ -351,6 +351,8 @@ a.slide, a.slide:hover, a.slide:active, a.slide:link, a.slide:visited
     overflow: hidden;
     background-color: white;
 }
+
+
 
 
 .top{top:0;}

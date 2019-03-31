@@ -207,9 +207,7 @@ class pluginSlickSlider extends Plugin {
 
 $textbox = <<<EOF
 <p class="detail" {$textColor}>
-    {$content}
-    <!-- Shows "read more" button if necessary -->
-
+    <a href="{$page->permaLink()}">{$content}</a>
 </p>
 EOF;
             
@@ -222,8 +220,8 @@ EOF;
 
             $actions = '<div class="actions">';
                 if(isset($p["btn-primary-text"]))  $actions .= '<a href="'.$p["btn-primary-link"].'" class="button">'.$p["btn-primary-text"].'</a>';
-                if(isset($p["btn-secondary-text"])&&false)$actions .= '<a href="'.$p["btn-secondary-link"].'" class="button">'.$p["btn-secondary-text"].'</a>';
-                else if($page->readMore()||true)              $actions .= '<a class="button" href="'.$page->permalink().'" role="button"> '.$L->get('Read more').'</a>';
+                if(isset($p["btn-secondary-text"]))$actions .= '<a href="'.$p["btn-secondary-link"].'" class="button">'.$p["btn-secondary-text"].'</a>';
+                else if($page->readMore())              $actions .= '<a class="button" href="'.$page->permalink().'" role="button"> '.$L->get('Read more').'</a>';
             $actions .= '</div>';
         }
         
@@ -238,14 +236,15 @@ EOF;
       
 //slide
 $html .= <<<EOF
-<div href="" class="slide" style="background-color:{$p["background-color"]}" {$openLink}>
+<div  class="slide" style="background-color:{$p["background-color"]}">
     <input id="slide_bg_{$index}" type="hidden" value="{$p["background-color"]}">
     <img src="{$page->coverImage()}" 
         class="{$p["img-pos"]} {$p["img-mode"]}"
     >
+    <a style="background-color:yellow"></a>
     <div class="textbox {$boxmat} {$p['box-pos']}" style="background-color:{$p["box-color"]}">
         <h1 class="title" {$textColor}>
-            {$page->title()}
+            <a href="{$page->permaLink()}">{$page->title()}</a>
         </h1>
 
         {$textbox}
